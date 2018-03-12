@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">FilePicker</string>
+
+    <string name="dialog_title_pick_folder">Pick folder</string>
+    <string name="dialog_title_pick_folders">Pick folders</string>
+    <string name="dialog_title_pick_file">Pick file</string>
+    <string name="dialog_title_pick_files">Pick files</string>
+    <string name="dialog_title_pick_file_or_folder">Pick file or folder</string>
+    <string name="dialog_title_pick_files_and_folders">Pick files or folders</string>
+
+    <string name="button_deeper">Deeper</string>
+    <string name="button_pick">Pick</string>
+    <string name="button_up">Up</string>
+</resources>
