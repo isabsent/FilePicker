@@ -55,6 +55,8 @@ dependencies {
 //https://android-tools.ru/coding/kak-sozdat-svoyu-sobstvennuyu-biblioteku-android-cherez-jcenter-i-maven-central/
 //https://github.com/danielemaddaluno/gradle-jcenter-publish
 //https://antoniocappiello.com/2015/11/11/publish-your-library-to-jcenter-in-3-steps/
-//gradlew install, gradle bintrayUpload
+
+//gradlew install
+// gradlew bintrayUpload
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
