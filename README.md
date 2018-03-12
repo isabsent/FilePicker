@@ -13,3 +13,5 @@ File and folder picker dialog
       <version>1.0.00</version>
       <type>pom</type>
     </dependency>
+
+![Pic. 1](https://www.dropbox.com/s/jb1e3v0iaay8p39/Screenshot_01.png?dl=0)
