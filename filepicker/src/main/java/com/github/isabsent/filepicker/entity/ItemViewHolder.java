@@ -16,8 +16,8 @@ public class ItemViewHolder {
     private ImageView imageView;
 
     public ItemViewHolder(View itemView) {
-        textView = itemView.findViewById(R.id.text1);
-        imageView = itemView.findViewById(R.id.icon);
+        textView = (TextView) itemView.findViewById(R.id.text1);
+        imageView = (ImageView) itemView.findViewById(R.id.icon);
     }
 
     public void bind(Item item, int choiceMode, boolean isItemChecked, Spannable text) {

@@ -17,9 +17,9 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven {//https://stackoverflow.com/a/45397095/753575
-            url "https://maven.google.com"
-        }
+//        maven {//https://stackoverflow.com/a/45397095/753575
+//            url "https://maven.google.com"
+//        }
     }
 }
 
