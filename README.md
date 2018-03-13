@@ -14,4 +14,4 @@ File and folder picker dialog
       <type>pom</type>
     </dependency>
 
-![Pic. 1](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_01.png | width=360)
+
