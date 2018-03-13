@@ -251,9 +251,9 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 
             if (isPathAcceptable(path)) {
                 if (title != null)
-                    mListener.showListItemDialog(title, path, mode);
+                    mListener.showListItemDialog(title, path, mode, getTag());
                 else if (titleResId > 0)
-                    mListener.showListItemDialog(titleResId, path, mode);
+                    mListener.showListItemDialog(titleResId, path, mode, getTag());
             }
         }
     }
@@ -470,8 +470,8 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
     }
 
     public interface OnInteractionListener extends OnDialogResultListener {
-        void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode);
+        void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag);
 
-        void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode);
+        void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag);
     }
 }
