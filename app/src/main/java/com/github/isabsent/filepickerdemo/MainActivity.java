@@ -21,7 +21,7 @@ import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMod
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_MULTI_CHOICE;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_SINGLE_CHOICE;
 
-public class MainActivity extends AppCompatActivity implements SimpleFilePickerDialog.OnInteractionListener {
+public class MainActivity extends AppCompatActivity implements SimpleFilePickerDialog.InteractionListenerInt {
     private static final String  PICK_DIALOG = "PICK_DIALOG";
 
     @Override
@@ -96,13 +96,6 @@ public class MainActivity extends AppCompatActivity implements SimpleFilePickerD
                 showListItemDialog(R.string.dialog_title_pick_file_or_folder, rootPath, FILE_OR_FOLDER_DIRECT_CHOICE, PICK_DIALOG);
             }
         });
-    }
-
-    @Override
-    public void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
-        buildListItemDialog(folderPath, mode)
-                .title(title)
-                .show(this, dialogTag);
     }
 
     @Override

@@ -69,7 +69,8 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
     private CompositeMode mode;
     private int choiceMode;
     private String folderPath;
-    private OnInteractionListener mListener;
+    private InteractionListenerString mListenerString;
+    private InteractionListenerInt mListenerInt;
 
     public static SimpleFilePickerDialog build(){
         return new SimpleFilePickerDialog();
@@ -250,10 +251,10 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 titleResId = (Integer) value;
 
             if (isPathAcceptable(path)) {
-                if (title != null)
-                    mListener.showListItemDialog(title, path, mode, getTag());
-                else if (titleResId > 0)
-                    mListener.showListItemDialog(titleResId, path, mode, getTag());
+                if (title != null && mListenerString != null)
+                    mListenerString.showListItemDialog(title, path, mode, getTag());
+                else if (titleResId > 0 && mListenerInt != null )
+                    mListenerInt.showListItemDialog(titleResId, path, mode, getTag());
             }
         }
     }
@@ -422,17 +423,20 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnInteractionListener) {
-            mListener = (OnInteractionListener) context;
+        if (context instanceof InteractionListenerString) {
+            mListenerString = (InteractionListenerString) context;
+        } else if (context instanceof InteractionListenerInt){
+            mListenerInt = (InteractionListenerInt) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement SimpleListDialogModInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement InteractionListenerString or InteractionListenerInt");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mListenerInt = null;
+        mListenerString = null;
     }
 
     public enum CompositeMode {
@@ -469,9 +473,11 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         ITEM_FILE_ONLY, ITEM_FOLDER_ONLY, ITEM_FILE_FOLDER
     }
 
-    public interface OnInteractionListener extends OnDialogResultListener {
+    public interface InteractionListenerString extends OnDialogResultListener {
         void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag);
+    }
 
+    public interface InteractionListenerInt extends OnDialogResultListener {
         void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag);
     }
 }
