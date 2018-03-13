@@ -43,7 +43,6 @@ import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUT
 public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDialog> {
     private static final String
             TAG = "simpleListDialog",
-            COMPOSITE_MODE = TAG + "compositeMode",
             PATH_ARRAY = TAG + "pathArray",
             FOLDER_PATH = TAG + "folderPath";
 
@@ -63,6 +62,8 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
             SELECTED_SINGLE_LABEL = TAG + "selectedSingleLabel",
             SELECTED_SINGLE_PATH = TAG + "selectedSinglePath",
             HIGHLIGHT = TAG + "highlight";
+
+    public static final String COMPOSITE_MODE = TAG + "compositeMode";
 
     private ArrayList<SimpleFilePickerItem> mData;
     private Button deeperButton, pickButton;
@@ -207,6 +208,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                     result.putString(SELECTED_SINGLE_PATH, paths[selectedPosition]);
                 }
             }
+            result.putInt(COMPOSITE_MODE, mode.ordinal());
         }
         return result;
     }
@@ -479,5 +481,9 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 
     public interface InteractionListenerInt extends OnDialogResultListener {
         void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag);
+    }
+
+    public static CompositeMode getMode(int modeOrdinal){
+        return CompositeMode.values()[modeOrdinal];
     }
 }
