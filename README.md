@@ -3,7 +3,9 @@ File and folder picker dialog
 
 ## Gradle:
 
-  `compile 'com.github.isabsent:filepicker:1.0.00'`
+    dependencies {
+      compile 'com.github.isabsent:filepicker:1.0.00'
+    }
 
 ## Maven:
 
