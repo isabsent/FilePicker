@@ -4,7 +4,7 @@ File and folder picker dialog
 ## Gradle:
 
     dependencies {
-      compile 'com.github.isabsent:filepicker:1.0.05'
+      compile 'com.github.isabsent:filepicker:1.0.06'
     }
 
 ## Maven:
@@ -12,7 +12,7 @@ File and folder picker dialog
     <dependency>
       <groupId>com.github.isabsent</groupId>
       <artifactId>filepicker</artifactId>
-      <version>1.0.05</version>
+      <version>1.0.06</version>
       <type>pom</type>
     </dependency>
 
