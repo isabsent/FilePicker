@@ -18,9 +18,10 @@ File and folder picker dialog
 
 [The example of usage](https://github.com/isabsent/FilePicker/blob/master/app/src/main/java/com/github/isabsent/filepickerdemo/MainActivity.java)
 
-![Pic. 2](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_02.png)
-![Pic. 3](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_03.png)
-![Pic. 4](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_04.png)
+![Pic. 1](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_02.png)
+![Pic. 2](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_03.png)
+![Pic. 3](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_04.png)
+![Pic. 4](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_05.png)
 
 This library is an extension of [**SimpleDialogFragments**](https://github.com/eltos/SimpleDialogFragments)
 

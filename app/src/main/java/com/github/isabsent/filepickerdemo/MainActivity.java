@@ -12,12 +12,15 @@ import com.github.isabsent.filepicker.SimpleFilePickerDialog;
 import java.util.List;
 
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_AND_FOLDER_MULTI_CHOICE;
-import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_ONLY_DIRECT_CHOICE;
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_ONLY_DIRECT_CHOICE_IMMEDIATE;
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_ONLY_DIRECT_CHOICE_POSTPONED;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_ONLY_MULTI_CHOICE;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_ONLY_SINGLE_CHOICE;
-import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_OR_FOLDER_DIRECT_CHOICE;
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_OR_FOLDER_DIRECT_CHOICE_IMMEDIATE;
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_OR_FOLDER_SINGLE_CHOICE;
-import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_DIRECT_CHOICE;
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_DIRECT_CHOICE_IMMEDIATE;
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_DIRECT_CHOICE_POSTPONED;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_MULTI_CHOICE;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_SINGLE_CHOICE;
 
@@ -48,10 +51,17 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.file_direct).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.file_direct_immediate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showListItemDialog(R.string.dialog_title_pick_file, rootPath, FILE_ONLY_DIRECT_CHOICE, PICK_DIALOG);
+                showListItemDialog(R.string.dialog_title_pick_file, rootPath, FILE_ONLY_DIRECT_CHOICE_IMMEDIATE, PICK_DIALOG);
+            }
+        });
+
+        findViewById(R.id.file_direct_postponed).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showListItemDialog(R.string.dialog_title_pick_file, rootPath, FILE_ONLY_DIRECT_CHOICE_POSTPONED, PICK_DIALOG);
             }
         });
 
@@ -70,10 +80,17 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.folder_direct).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.folder_direct_immediate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showListItemDialog(getString(R.string.dialog_title_pick_folder), rootPath, FOLDER_ONLY_DIRECT_CHOICE, PICK_DIALOG);
+                showListItemDialog(getString(R.string.dialog_title_pick_folder), rootPath, FOLDER_ONLY_DIRECT_CHOICE_IMMEDIATE, PICK_DIALOG);
+            }
+        });
+
+        findViewById(R.id.folder_direct_postponed).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showListItemDialog(getString(R.string.dialog_title_pick_folder), rootPath, FOLDER_ONLY_DIRECT_CHOICE_POSTPONED, PICK_DIALOG);
             }
         });
 
@@ -92,10 +109,17 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        findViewById(R.id.file_or_folder_direct).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.file_or_folder_direct_immediate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showListItemDialog(R.string.dialog_title_pick_file_or_folder, rootPath, FILE_OR_FOLDER_DIRECT_CHOICE, PICK_DIALOG);
+                showListItemDialog(R.string.dialog_title_pick_file_or_folder, rootPath, FILE_OR_FOLDER_DIRECT_CHOICE_IMMEDIATE, PICK_DIALOG);
+            }
+        });
+
+        findViewById(R.id.file_or_folder_direct_postponed).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showListItemDialog(R.string.dialog_title_pick_file_or_folder, rootPath, FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED, PICK_DIALOG);
             }
         });
     }

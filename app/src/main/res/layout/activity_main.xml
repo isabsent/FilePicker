@@ -4,123 +4,161 @@
             android:layout_height="match_parent"
             android:fillViewport="true"
             android:orientation="vertical">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
             android:text="File picker modes"
-            android:layout_marginTop="12dp"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textStyle="bold"/>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/file_single"
-                    android:text="Single choice"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/file_multi"
-                    android:text="Multi choice"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/file_single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Single choice"/>
+
+            <Button
+                android:id="@+id/file_multi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Multi choice"/>
         </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
         <Button
-            android:id="@+id/file_direct"
-            android:text="Single direct choice"
-            android:layout_marginTop="4dp"
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/file_direct_immediate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Single direct\nchoice immediate"/>
+        <Button
+            android:id="@+id/file_direct_postponed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Single direct\nchoice postponed"/>
+        </LinearLayout>
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
             android:text="Folder picker modes"
-            android:layout_marginTop="12dp"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textStyle="bold"/>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/folder_single"
-                    android:text="Single choice"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/folder_multi"
-                    android:text="Multi choice"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/folder_single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Single choice"/>
+
+            <Button
+                android:id="@+id/folder_multi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Multi choice"/>
         </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
         <Button
-            android:id="@+id/folder_direct"
-            android:text="Single direct choice"
-            android:layout_marginTop="4dp"
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/folder_direct_immediate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Single direct\nchoice immediate"/>
+        <Button
+            android:id="@+id/folder_direct_postponed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Single direct\nchoice postponed"/>
+    </LinearLayout>
 
         <TextView
-            android:text="Mixed picker modes"
-            android:layout_marginTop="24dp"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:text="Mixed picker modes"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-                <Button
-                    android:id="@+id/file_or_folder_single"
-                    android:text="Single choice"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <Button
-                    android:id="@+id/file_and_folder_multi"
-                    android:text="Multi choice"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/file_or_folder_single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Single choice"/>
+            <Button
+                android:id="@+id/file_and_folder_multi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Multi choice"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/file_or_folder_direct"
-            android:text="Single direct choice"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/file_or_folder_direct_immediate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Single direct\nchoice immediate"/>
+            <Button
+                android:id="@+id/file_or_folder_direct_postponed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Single direct\nchoice postponed"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

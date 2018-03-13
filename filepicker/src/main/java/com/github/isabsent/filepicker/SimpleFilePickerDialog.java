@@ -305,12 +305,14 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         private int mLayout;
         private int choiceMode;
         private ItemMode itemMode;
+        private CompositeMode mode;
 
         public SimpleFilePickerAdapter(@LayoutRes int layout, ArrayList<SimpleFilePickerItem> data, SimpleFilePickerDialog dialog){
             mLayout = layout;
             mDialog = dialog;
             choiceMode = mDialog.getArguments().getInt(CHOICE_MODE);
-            itemMode = CompositeMode.values()[mDialog.getArguments().getInt(COMPOSITE_MODE)].getItemMode();
+            mode = CompositeMode.values()[mDialog.getArguments().getInt(COMPOSITE_MODE)];
+            itemMode = mode.getItemMode();
 
             ArrayList<Pair<Item, Long>> dataAndIds = new ArrayList<>(data.size());
             for (SimpleFilePickerItem simpleFilePickerItem : data)
@@ -357,7 +359,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 text = highlight(item.toString(), mDialog.getContext());
             else
                 text = new SpannableString(item.toString());
-            viewHolder.bind(item, choiceMode, isItemChecked, text);
+            viewHolder.bind(item, mode, isItemChecked, text);
             convertView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -391,14 +393,21 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                         }
                     }
 
-                    if (!isDirectChoiceMode) {
-                        boolean isSingleFolderChecked = checkedFolders != null && checkedFolders.size() == 1;
-                        boolean isOpenEnabled = isSingleFolderChecked;
-                        mDialog.setButtons(isOpenEnabled, isPickEnabled);
-                    } else {
+                    boolean isSingleFolderChecked = checkedFolders != null && checkedFolders.size() == 1;
+                    if (isDirectChoiceMode) {
                         boolean isSingleItemChecked = checkedItems.size() == 1;
-                        if (isSingleItemChecked)
-                            mDialog.pressPositiveButton();//Open
+                        if (CompositeMode.isImmediate(mode)) {
+                            if (isSingleItemChecked)
+                                mDialog.pressPositiveButton();//Open
+                        } else {
+                            if (ITEM_FILE_ONLY.equals(itemMode))
+                                isPickEnabled = isSingleItemChecked && !isSingleFolderChecked;
+                            else
+                                isPickEnabled = isSingleItemChecked;
+                            mDialog.setButtons(isSingleFolderChecked, isPickEnabled);
+                        }
+                    } else {
+                        mDialog.setButtons(isSingleFolderChecked, isPickEnabled);
                     }
                 }
             });
@@ -442,15 +451,18 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
     public enum CompositeMode {
         FILE_ONLY_SINGLE_CHOICE(ITEM_FILE_ONLY, SINGLE_CHOICE),
         FILE_ONLY_MULTI_CHOICE(ITEM_FILE_ONLY, MULTI_CHOICE),
-        FILE_ONLY_DIRECT_CHOICE(ITEM_FILE_ONLY, SINGLE_CHOICE_DIRECT),
+        FILE_ONLY_DIRECT_CHOICE_IMMEDIATE(ITEM_FILE_ONLY, SINGLE_CHOICE_DIRECT),
+        FILE_ONLY_DIRECT_CHOICE_POSTPONED(ITEM_FILE_ONLY, SINGLE_CHOICE_DIRECT),
 
         FOLDER_ONLY_SINGLE_CHOICE(ITEM_FOLDER_ONLY, SINGLE_CHOICE),
         FOLDER_ONLY_MULTI_CHOICE(ITEM_FOLDER_ONLY, MULTI_CHOICE),
-        FOLDER_ONLY_DIRECT_CHOICE(ITEM_FOLDER_ONLY, SINGLE_CHOICE_DIRECT),
+        FOLDER_ONLY_DIRECT_CHOICE_IMMEDIATE(ITEM_FOLDER_ONLY, SINGLE_CHOICE_DIRECT),
+        FOLDER_ONLY_DIRECT_CHOICE_POSTPONED(ITEM_FOLDER_ONLY, SINGLE_CHOICE_DIRECT),
 
         FILE_OR_FOLDER_SINGLE_CHOICE(ITEM_FILE_FOLDER, SINGLE_CHOICE),
         FILE_AND_FOLDER_MULTI_CHOICE(ITEM_FILE_FOLDER, MULTI_CHOICE),
-        FILE_OR_FOLDER_DIRECT_CHOICE(ITEM_FILE_FOLDER, SINGLE_CHOICE_DIRECT);
+        FILE_OR_FOLDER_DIRECT_CHOICE_IMMEDIATE(ITEM_FILE_FOLDER, SINGLE_CHOICE_DIRECT),
+        FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED(ITEM_FILE_FOLDER, SINGLE_CHOICE_DIRECT);
 
         private ItemMode itemMode;
         private int choiceMode;
@@ -467,9 +479,15 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         public int getChoiceMode() {
             return choiceMode;
         }
+
+        public static boolean isImmediate(CompositeMode mode){
+            return FILE_ONLY_DIRECT_CHOICE_IMMEDIATE.equals(mode)
+                    || FOLDER_ONLY_DIRECT_CHOICE_IMMEDIATE.equals(mode)
+                    || FILE_OR_FOLDER_DIRECT_CHOICE_IMMEDIATE.equals(mode);
+        }
     }
 
-    public enum ItemMode{
+    enum ItemMode{
         ITEM_FILE_ONLY, ITEM_FOLDER_ONLY, ITEM_FILE_FOLDER
     }
 
