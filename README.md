@@ -15,7 +15,6 @@ File and folder picker dialog
     </dependency>
 
 
-![Pic. 1](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_01.png)
 ![Pic. 2](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_02.png)
 ![Pic. 3](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_03.png)
 ![Pic. 4](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_04.png)
