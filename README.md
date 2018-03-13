@@ -19,6 +19,8 @@ File and folder picker dialog
 ![Pic. 3](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_03.png)
 ![Pic. 4](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_04.png)
 
+This library is an extension of **SimpleDialogFragments** https://github.com/eltos/SimpleDialogFragments
+
 ## License
 
 Copyright 2018 Lev Popovich (github.com/isabsent)
