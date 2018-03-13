@@ -13,5 +13,5 @@ File and folder picker dialog
       <version>1.0.00</version>
       <type>pom</type>
     </dependency>
-6
+
 ![Pic. 1](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_01.png | width=360)
