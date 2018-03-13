@@ -8,7 +8,7 @@
     <string name="dialog_title_pick_file_or_folder">Pick file or folder</string>
     <string name="dialog_title_pick_files_and_folders">Pick files or folders</string>
 
-    <string name="button_deeper">Deeper</string>
+    <string name="button_open">Open</string>
     <string name="button_pick">Pick</string>
     <string name="button_up">Up</string>
 </resources>

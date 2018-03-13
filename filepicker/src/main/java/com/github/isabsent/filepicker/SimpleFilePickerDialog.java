@@ -43,6 +43,7 @@ import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUT
 public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDialog> {
     private static final String
             TAG = "simpleListDialog",
+            COMPOSITE_MODE = TAG + "compositeMode",
             PATH_ARRAY = TAG + "pathArray",
             FOLDER_PATH = TAG + "folderPath";
 
@@ -62,8 +63,6 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
             SELECTED_SINGLE_LABEL = TAG + "selectedSingleLabel",
             SELECTED_SINGLE_PATH = TAG + "selectedSinglePath",
             HIGHLIGHT = TAG + "highlight";
-
-    public static final String COMPOSITE_MODE = TAG + "compositeMode";
 
     private ArrayList<SimpleFilePickerItem> mData;
     private Button deeperButton, pickButton;
@@ -150,7 +149,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 upButton.setEnabled(false);
             }
 
-            deeperButton = alertDialog.getButton(Dialog.BUTTON_POSITIVE);   //Deeper
+            deeperButton = alertDialog.getButton(Dialog.BUTTON_POSITIVE);   //Open
             pickButton = alertDialog.getButton(Dialog.BUTTON_NEUTRAL);      //Pick
 
             if (ITEM_FILE_ONLY.equals(mode.getItemMode()))
@@ -169,8 +168,8 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 case BUTTON_NEGATIVE://Up
                     showListItemDialog(new File(folderPath).getParent());
                     return result;
-                case BUTTON_POSITIVE://Deeper
-                    String selectedPath = getPathToGoDeeper(result);
+                case BUTTON_POSITIVE://Open
+                    String selectedPath = getPathToOpen(result);
                     if (selectedPath != null) {
                         showListItemDialog(selectedPath);
                         return result;
@@ -208,12 +207,11 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                     result.putString(SELECTED_SINGLE_PATH, paths[selectedPosition]);
                 }
             }
-            result.putInt(COMPOSITE_MODE, mode.ordinal());
         }
         return result;
     }
 
-    private String getPathToGoDeeper(Bundle extras){
+    private String getPathToOpen(Bundle extras){
         if (getArguments() != null) {
             String[] paths = getArguments().getStringArray(PATH_ARRAY);
             if (paths != null) {
@@ -395,12 +393,12 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 
                     if (!isDirectChoiceMode) {
                         boolean isSingleFolderChecked = checkedFolders != null && checkedFolders.size() == 1;
-                        boolean isDeeperEnabled = isSingleFolderChecked;
-                        mDialog.setButtons(isDeeperEnabled, isPickEnabled);
+                        boolean isOpenEnabled = isSingleFolderChecked;
+                        mDialog.setButtons(isOpenEnabled, isPickEnabled);
                     } else {
                         boolean isSingleItemChecked = checkedItems.size() == 1;
                         if (isSingleItemChecked)
-                            mDialog.pressPositiveButton();//Deeper
+                            mDialog.pressPositiveButton();//Open
                     }
                 }
             });
@@ -408,9 +406,9 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         }
     }
 
-    private void setButtons(boolean isDeeperEnabled, boolean isPickEnabled) {
-        deeperButton.setVisibility(isDeeperEnabled ? View.VISIBLE : View.GONE);
-        deeperButton.setEnabled(isDeeperEnabled);
+    private void setButtons(boolean isOpenEnabled, boolean isPickEnabled) {
+        deeperButton.setVisibility(isOpenEnabled ? View.VISIBLE : View.GONE);
+        deeperButton.setEnabled(isOpenEnabled);
         if (ITEM_FILE_FOLDER.equals(mode.getItemMode()) || ITEM_FILE_ONLY.equals(mode.getItemMode())) {
             pickButton.setVisibility(isPickEnabled ? View.VISIBLE : View.GONE);
             pickButton.setEnabled(isPickEnabled);
@@ -425,13 +423,13 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof InteractionListenerString) {
+        if (context instanceof InteractionListenerString)
             mListenerString = (InteractionListenerString) context;
-        } else if (context instanceof InteractionListenerInt){
+        if (context instanceof InteractionListenerInt)
             mListenerInt = (InteractionListenerInt) context;
-        } else {
+        if (mListenerString == null && mListenerInt == null)
             throw new RuntimeException(context.toString() + " must implement InteractionListenerString or InteractionListenerInt");
-        }
+
     }
 
     @Override
@@ -481,9 +479,5 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 
     public interface InteractionListenerInt extends OnDialogResultListener {
         void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag);
-    }
-
-    public static CompositeMode getMode(int modeOrdinal){
-        return CompositeMode.values()[modeOrdinal];
     }
 }

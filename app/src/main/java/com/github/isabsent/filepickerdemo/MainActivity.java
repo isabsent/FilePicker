@@ -21,7 +21,9 @@ import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMod
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_MULTI_CHOICE;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FOLDER_ONLY_SINGLE_CHOICE;
 
-public class MainActivity extends AppCompatActivity implements SimpleFilePickerDialog.InteractionListenerInt {
+public class MainActivity extends AppCompatActivity implements
+        SimpleFilePickerDialog.InteractionListenerString,
+        SimpleFilePickerDialog.InteractionListenerInt {
     private static final String  PICK_DIALOG = "PICK_DIALOG";
 
     @Override
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SimpleFilePickerD
         findViewById(R.id.file_multi).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showListItemDialog(R.string.dialog_title_pick_files, rootPath, FILE_ONLY_MULTI_CHOICE, PICK_DIALOG);
+                showListItemDialog(getString(R.string.dialog_title_pick_files), rootPath, FILE_ONLY_MULTI_CHOICE, PICK_DIALOG);
             }
         });
 
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements SimpleFilePickerD
         findViewById(R.id.folder_single).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showListItemDialog(R.string.dialog_title_pick_folder, rootPath, FOLDER_ONLY_SINGLE_CHOICE, PICK_DIALOG);
+                showListItemDialog(getString(R.string.dialog_title_pick_folder), rootPath, FOLDER_ONLY_SINGLE_CHOICE, PICK_DIALOG);
             }
         });
 
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements SimpleFilePickerD
         findViewById(R.id.folder_direct).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showListItemDialog(R.string.dialog_title_pick_folder, rootPath, FOLDER_ONLY_DIRECT_CHOICE, PICK_DIALOG);
+                showListItemDialog(getString(R.string.dialog_title_pick_folder), rootPath, FOLDER_ONLY_DIRECT_CHOICE, PICK_DIALOG);
             }
         });
 
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements SimpleFilePickerD
         findViewById(R.id.file_and_folder_multi).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showListItemDialog(R.string.dialog_title_pick_files_and_folders, rootPath, FILE_AND_FOLDER_MULTI_CHOICE, PICK_DIALOG);
+                showListItemDialog(getString(R.string.dialog_title_pick_files_and_folders), rootPath, FILE_AND_FOLDER_MULTI_CHOICE, PICK_DIALOG);
             }
         });
 
@@ -102,6 +104,13 @@ public class MainActivity extends AppCompatActivity implements SimpleFilePickerD
     public void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
         buildListItemDialog(folderPath, mode)
                 .title(titleResId)
+                .show(this, dialogTag);
+    }
+
+    @Override
+    public void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
+        buildListItemDialog(folderPath, mode)
+                .title(title)
                 .show(this, dialogTag);
     }
 
@@ -125,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements SimpleFilePickerD
         return SimpleFilePickerDialog.build()
                 .path(folderPath, mode)
                 .choiceMin(1)
-                .pos(R.string.button_deeper)
+                .pos(R.string.button_open)
                 .neg(R.string.button_up)
                 .neut(R.string.button_pick);
     }
