@@ -158,9 +158,9 @@ public class MainActivity extends AppCompatActivity implements
         return SimpleFilePickerDialog.build()
                 .path(folderPath, mode)
                 .choiceMin(1)
-                .pos(R.string.button_open)
-                .neg(R.string.button_up)
-                .neut(R.string.button_pick);
+                .neg(R.string.button_open)
+                .neut(R.string.button_up)
+                .pos(R.string.button_pick);
     }
 
     private void showSelectedPathsToast(List<String> selectedPaths){

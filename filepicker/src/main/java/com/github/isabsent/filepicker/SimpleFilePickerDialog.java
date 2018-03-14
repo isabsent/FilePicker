@@ -2,10 +2,12 @@ package com.github.isabsent.filepicker;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
@@ -38,14 +40,14 @@ import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITE
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITEM_FOLDER_ONLY;
 import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUTTON_NEGATIVE;
 import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUTTON_NEUTRAL;
-import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUTTON_POSITIVE;
 
 public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDialog> {
     private static final String
             TAG = "simpleListDialog",
             COMPOSITE_MODE = TAG + "compositeMode",
             PATH_ARRAY = TAG + "pathArray",
-            FOLDER_PATH = TAG + "folderPath";
+            FOLDER_PATH = TAG + "folderPath",
+            BUTTONS_ENABLED = TAG + "buttonsEnabled";
 
     protected final static String DATA_SET = TAG + "data_set";
 
@@ -65,7 +67,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
             HIGHLIGHT = TAG + "highlight";
 
     private ArrayList<SimpleFilePickerItem> mData;
-    private Button deeperButton, pickButton;
+    private Button openButton, upButton, selectButton;
     private CompositeMode mode;
     private int choiceMode;
     private String folderPath;
@@ -129,14 +131,19 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         if (savedInstanceState != null) {
             folderPath = savedInstanceState.getString(FOLDER_PATH);
             mode = CompositeMode.values()[savedInstanceState.getInt(COMPOSITE_MODE)];
+            buttonsEnabled = savedInstanceState.getBooleanArray(BUTTONS_ENABLED);
         }
     }
+
+    private boolean[] buttonsEnabled;
 
     @Override
     public void onSaveInstanceState(Bundle outState) { //Save the fragment's state here
         super.onSaveInstanceState(outState);
         outState.putString(FOLDER_PATH, folderPath);
         outState.putInt(COMPOSITE_MODE, mode.ordinal());
+        buttonsEnabled = new boolean[]{upButton.isEnabled(), openButton.isEnabled(), selectButton.isEnabled()};
+        outState.putBooleanArray(BUTTONS_ENABLED, buttonsEnabled);
     }
 
     @Override
@@ -144,19 +151,27 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         super.onStart();
         AlertDialog alertDialog = (AlertDialog) getDialog();
         if (alertDialog != null) {
-            if (isExternalStorageRoot(folderPath)) {
-                Button upButton = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);//Up
+            upButton = alertDialog.getButton(Dialog.BUTTON_NEUTRAL);//Up
+            if (isExternalStorageRoot(folderPath))
                 upButton.setEnabled(false);
-            }
 
-            deeperButton = alertDialog.getButton(Dialog.BUTTON_POSITIVE);   //Open
-            pickButton = alertDialog.getButton(Dialog.BUTTON_NEUTRAL);      //Pick
-
-            if (ITEM_FILE_ONLY.equals(mode.getItemMode()))
-                pickButton.setEnabled(false);
-
+            openButton = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);//Open
             if (choiceMode == SimpleListDialog.SINGLE_CHOICE_DIRECT)
-                deeperButton.setVisibility(View.GONE);
+                openButton.setEnabled(false);
+
+            selectButton = alertDialog.getButton(Dialog.BUTTON_POSITIVE);//Select
+            if (ITEM_FILE_ONLY.equals(mode.getItemMode()))
+                selectButton.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (buttonsEnabled != null) {
+            upButton.setEnabled(buttonsEnabled[0]);
+            openButton.setEnabled(buttonsEnabled[1]);
+            selectButton.setEnabled(buttonsEnabled[2]);
         }
     }
 
@@ -165,10 +180,10 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         Bundle result = super.onResult(which);
         if (result != null) {
             switch (which) {
-                case BUTTON_NEGATIVE://Up
+                case BUTTON_NEUTRAL://Up
                     showListItemDialog(new File(folderPath).getParent());
                     return result;
-                case BUTTON_POSITIVE://Open
+                case BUTTON_NEGATIVE://Open
                     String selectedPath = getPathToOpen(result);
                     if (selectedPath != null) {
                         showListItemDialog(selectedPath);
@@ -178,7 +193,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 
             ArrayList<Integer> positions = result.getIntegerArrayList(SELECTED_POSITIONS);
 
-            if (positions != null && positions.isEmpty() && !result.containsKey(SELECTED_SINGLE_POSITION) && which == BUTTON_NEUTRAL) {//Pick
+            if (positions != null && positions.isEmpty() && !result.containsKey(SELECTED_SINGLE_POSITION) && which == BUTTON_NEGATIVE) {//Select
                 result.putString(SELECTED_SINGLE_PATH, folderPath);
                 return result;
             }
@@ -336,14 +351,6 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-//            TextView textView;
-//            if (convertView == null){
-//                convertView = mDialog.inflate(mLayout, parent, false);
-//                textView = (TextView) convertView;
-//                convertView.setTag(textView);
-//            } else {
-//                textView = (TextView) convertView.getTag();
-//            }
             ItemViewHolder viewHolder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(mDialog.getContext()).inflate(mLayout, parent, false);
@@ -398,7 +405,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                         boolean isSingleItemChecked = checkedItems.size() == 1;
                         if (CompositeMode.isImmediate(mode)) {
                             if (isSingleItemChecked)
-                                mDialog.pressPositiveButton();//Open
+                                mDialog.pressNegativeButton();//Open
                         } else {
                             if (ITEM_FILE_ONLY.equals(itemMode))
                                 isPickEnabled = isSingleItemChecked && !isSingleFolderChecked;
@@ -415,12 +422,19 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         }
     }
 
+    protected final void pressNegativeButton(){
+//        if (acceptsNegativeButtonPress()) {
+            getDialog().dismiss();
+            callResultListener(DialogInterface.BUTTON_NEGATIVE, null);
+//        }
+    }
+
     private void setButtons(boolean isOpenEnabled, boolean isPickEnabled) {
-        deeperButton.setVisibility(isOpenEnabled ? View.VISIBLE : View.GONE);
-        deeperButton.setEnabled(isOpenEnabled);
+//        openButton.setVisibility(isOpenEnabled ? View.VISIBLE : View.GONE);
+        openButton.setEnabled(isOpenEnabled);
         if (ITEM_FILE_FOLDER.equals(mode.getItemMode()) || ITEM_FILE_ONLY.equals(mode.getItemMode())) {
-            pickButton.setVisibility(isPickEnabled ? View.VISIBLE : View.GONE);
-            pickButton.setEnabled(isPickEnabled);
+//            selectButton.setVisibility(isPickEnabled ? View.VISIBLE : View.GONE);
+            selectButton.setEnabled(isPickEnabled);
         }
     }
 
