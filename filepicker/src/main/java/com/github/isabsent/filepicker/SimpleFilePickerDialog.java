@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
@@ -22,6 +21,9 @@ import com.github.isabsent.filepicker.entity.Item;
 import com.github.isabsent.filepicker.entity.ItemViewHolder;
 import com.github.isabsent.filepicker.entity.SimpleFilePickerItem;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -35,11 +37,13 @@ import eltos.simpledialogfragment.list.AdvancedAdapter;
 import eltos.simpledialogfragment.list.CustomListDialog;
 import eltos.simpledialogfragment.list.SimpleListDialog;
 
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITEM_FILE_FOLDER;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITEM_FILE_ONLY;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITEM_FOLDER_ONLY;
 import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUTTON_NEGATIVE;
 import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUTTON_NEUTRAL;
+import static eltos.simpledialogfragment.SimpleDialog.OnDialogResultListener.BUTTON_POSITIVE;
 
 public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDialog> {
     private static final String
@@ -74,8 +78,17 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
     private InteractionListenerString mListenerString;
     private InteractionListenerInt mListenerInt;
 
-    public static SimpleFilePickerDialog build(){
-        return new SimpleFilePickerDialog();
+    public static SimpleFilePickerDialog build(String folderPath, CompositeMode mode){
+        if (folderPath == null)
+            folderPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        if (mode == null)
+            mode = FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED;
+
+        return new SimpleFilePickerDialog().path(folderPath, mode)
+                .choiceMin(1)
+                .neut(R.string.button_up)
+                .neg(R.string.button_open)
+                .pos(R.string.button_select);
     }
 
     /**
@@ -156,12 +169,14 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 upButton.setEnabled(false);
 
             openButton = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);//Open
-            if (choiceMode == SimpleListDialog.SINGLE_CHOICE_DIRECT)
+//            if (choiceMode == SimpleListDialog.SINGLE_CHOICE_DIRECT)
                 openButton.setEnabled(false);
 
             selectButton = alertDialog.getButton(Dialog.BUTTON_POSITIVE);//Select
             if (ITEM_FILE_ONLY.equals(mode.getItemMode()))
                 selectButton.setEnabled(false);
+//            else
+//                selectButton.setEnabled(true);
         }
     }
 
@@ -189,6 +204,17 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                         showListItemDialog(selectedPath);
                         return result;
                     }
+                    break;
+                case BUTTON_POSITIVE: //Select
+                    if (isSelectionEmpty(result)) {//Choosing a parent folder
+                        String[] paths = getArguments().getStringArray(PATH_ARRAY);
+                        if (paths != null) {
+                            result.putString(SELECTED_SINGLE_LABEL, FilenameUtils.getName(folderPath));
+                            result.putString(SELECTED_SINGLE_PATH, folderPath);
+                        }
+                        return result;
+                    }
+                    break;
             }
 
             ArrayList<Integer> positions = result.getIntegerArrayList(SELECTED_POSITIONS);
@@ -198,7 +224,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 return result;
             }
 
-            if (positions != null && getArguments() != null) {
+            if (positions != null && !positions.isEmpty() && getArguments() != null) {
                 String[] paths = getArguments().getStringArray(PATH_ARRAY);
                 if (paths != null) {
                     ArrayList<String> labels = new ArrayList<>(positions.size());
@@ -226,6 +252,10 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         return result;
     }
 
+    private boolean isSelectionEmpty(Bundle result) {
+        return !result.containsKey(SELECTED_SINGLE_POSITION) && (!result.containsKey(SELECTED_POSITIONS) || result.getIntegerArrayList(SELECTED_POSITIONS).isEmpty());
+    }
+
     private String getPathToOpen(Bundle extras){
         if (getArguments() != null) {
             String[] paths = getArguments().getStringArray(PATH_ARRAY);
@@ -248,7 +278,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                         }
                     }
                 }
-                if (!new File(paths[selectedPathPosition]).isFile())
+                if (selectedPathPosition >= 0 && !new File(paths[selectedPathPosition]).isFile())
                     return paths[selectedPathPosition];
             }
         }
@@ -270,6 +300,8 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                     mListenerString.showListItemDialog(title, path, mode, getTag());
                 else if (titleResId > 0 && mListenerInt != null )
                     mListenerInt.showListItemDialog(titleResId, path, mode, getTag());
+                else if (title == null && titleResId == 0)
+                    mListenerString.showListItemDialog(null, path, mode, getTag());
             }
         }
     }
@@ -389,14 +421,14 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                     }
 
                     boolean isDirectChoiceMode = choiceMode == SINGLE_CHOICE_DIRECT;
-                    boolean isPickEnabled = false;
+                    boolean isSelectEnabled = false;
                     if (!isDirectChoiceMode) {
                         boolean areItemsChecked = checkedItems.size() > 0;
                         if (ITEM_FILE_ONLY.equals(itemMode)) {
                             boolean areFoldersChecked = checkedFolders != null && checkedFolders.size() > 0;
-                            isPickEnabled = !areFoldersChecked && areItemsChecked;
+                            isSelectEnabled = !areFoldersChecked && areItemsChecked;
                         } else {
-                            isPickEnabled = areItemsChecked;
+                            isSelectEnabled = areItemsChecked;
                         }
                     }
 
@@ -404,17 +436,19 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                     if (isDirectChoiceMode) {
                         boolean isSingleItemChecked = checkedItems.size() == 1;
                         if (CompositeMode.isImmediate(mode)) {
-                            if (isSingleItemChecked)
+                            if (isSingleFolderChecked)
                                 mDialog.pressNegativeButton();//Open
+                            else if (isSingleItemChecked)
+                                mDialog.pressPositiveButton();//Select
                         } else {
                             if (ITEM_FILE_ONLY.equals(itemMode))
-                                isPickEnabled = isSingleItemChecked && !isSingleFolderChecked;
+                                isSelectEnabled = isSingleItemChecked && !isSingleFolderChecked;
                             else
-                                isPickEnabled = isSingleItemChecked;
-                            mDialog.setButtons(isSingleFolderChecked, isPickEnabled);
+                                isSelectEnabled = isSingleItemChecked;
+                            mDialog.setButtons(isSingleFolderChecked, isSelectEnabled);
                         }
                     } else {
-                        mDialog.setButtons(isSingleFolderChecked, isPickEnabled);
+                        mDialog.setButtons(isSingleFolderChecked, isSelectEnabled);
                     }
                 }
             });
@@ -429,13 +463,11 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 //        }
     }
 
-    private void setButtons(boolean isOpenEnabled, boolean isPickEnabled) {
-//        openButton.setVisibility(isOpenEnabled ? View.VISIBLE : View.GONE);
+    private void setButtons(boolean isOpenEnabled, boolean isSelectEnabled) {
         openButton.setEnabled(isOpenEnabled);
-        if (ITEM_FILE_FOLDER.equals(mode.getItemMode()) || ITEM_FILE_ONLY.equals(mode.getItemMode())) {
-//            selectButton.setVisibility(isPickEnabled ? View.VISIBLE : View.GONE);
-            selectButton.setEnabled(isPickEnabled);
-        }
+//        if (ITEM_FILE_FOLDER.equals(mode.getItemMode()) || ITEM_FILE_ONLY.equals(mode.getItemMode()))
+            selectButton.setEnabled(isSelectEnabled);
+
     }
 
     private static boolean isExternalStorageRoot(String path) {
@@ -460,6 +492,12 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         super.onDetach();
         mListenerInt = null;
         mListenerString = null;
+    }
+
+    @Override
+    protected void onDialogShown() {
+        super.onDialogShown();
+        setPositiveButtonEnabled(!ItemMode.ITEM_FILE_ONLY.equals(mode.getItemMode()));
     }
 
     public enum CompositeMode {

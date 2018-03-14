@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FilePicker</string>
+
+    <string name="button_open">Open</string>
+    <string name="button_select">Select</string>
+    <string name="button_up">Up</string>
 </resources>

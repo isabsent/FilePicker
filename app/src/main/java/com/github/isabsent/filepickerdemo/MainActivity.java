@@ -27,7 +27,52 @@ import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMod
 public class MainActivity extends AppCompatActivity implements
         SimpleFilePickerDialog.InteractionListenerString,
         SimpleFilePickerDialog.InteractionListenerInt {
-    private static final String  PICK_DIALOG = "PICK_DIALOG";
+
+    private static final String          //If you need to show a few different mode pickers in one activity,
+            PICK_DIALOG = "PICK_DIALOG";  //you can distinguish them by this tag in onResult callback.
+
+    @Override
+    public void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
+        SimpleFilePickerDialog.build(folderPath, mode)
+                .title(titleResId)
+//                .neut("hoch")    //Some customization if you need
+//                .neg("eröffnen")
+//                .pos("wählen")
+//                .choiceMin(1);
+//                .filterable(true, true)
+                .show(this, dialogTag);
+    }
+
+    @Override
+    public void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
+        SimpleFilePickerDialog.build(folderPath, mode)
+                .title(title)
+//                .neut("hoch")    //Some customization if you need
+//                .neg("eröffnen")
+//                .pos("wählen")
+//                .choiceMin(1);
+//                .filterable(true, true)
+                .show(this, dialogTag);
+    }
+
+    @Override
+    public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
+        switch (dialogTag) {
+            case PICK_DIALOG:
+                if (extras.containsKey(SimpleFilePickerDialog.SELECTED_SINGLE_PATH)) {
+                    String selectedSinglePath = extras.getString(SimpleFilePickerDialog.SELECTED_SINGLE_PATH);
+                    Toast.makeText(this, "Path selected:\n" + selectedSinglePath, Toast.LENGTH_LONG).show();
+                } else if (extras.containsKey(SimpleFilePickerDialog.SELECTED_PATHS)){
+                    List<String> selectedPaths = extras.getStringArrayList(SimpleFilePickerDialog.SELECTED_PATHS);
+                    showSelectedPathsToast(selectedPaths);
+                }
+                break;
+//            case PICK_DIALOG_OTHER:
+//                //Do what you want here
+//                break;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +81,9 @@ public class MainActivity extends AppCompatActivity implements
 
         final String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-        //File picker modes
+//Button clicks with all available modes as an usage example:
+
+//File picker modes
         findViewById(R.id.file_single).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        //Folder picker modes
+//Folder picker modes
         findViewById(R.id.folder_single).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        //Mixed picker modes
+//Mixed picker modes
         findViewById(R.id.file_or_folder_single).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,45 +169,6 @@ public class MainActivity extends AppCompatActivity implements
                 showListItemDialog(R.string.dialog_title_pick_file_or_folder, rootPath, FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED, PICK_DIALOG);
             }
         });
-    }
-
-    @Override
-    public void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
-        buildListItemDialog(folderPath, mode)
-                .title(titleResId)
-                .show(this, dialogTag);
-    }
-
-    @Override
-    public void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
-        buildListItemDialog(folderPath, mode)
-                .title(title)
-                .show(this, dialogTag);
-    }
-
-    @Override
-    public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
-        switch (dialogTag) {
-            case PICK_DIALOG:
-                if (extras.containsKey(SimpleFilePickerDialog.SELECTED_SINGLE_PATH)) {
-                    String selectedSinglePath = extras.getString(SimpleFilePickerDialog.SELECTED_SINGLE_PATH);
-                    Toast.makeText(this, "Path selected:\n" + selectedSinglePath, Toast.LENGTH_LONG).show();
-                } else if (extras.containsKey(SimpleFilePickerDialog.SELECTED_PATHS)){
-                    List<String> selectedPaths = extras.getStringArrayList(SimpleFilePickerDialog.SELECTED_PATHS);
-                    showSelectedPathsToast(selectedPaths);
-                }
-                break;
-        }
-        return false;
-    }
-
-    private SimpleFilePickerDialog buildListItemDialog(String folderPath, SimpleFilePickerDialog.CompositeMode mode){
-        return SimpleFilePickerDialog.build()
-                .path(folderPath, mode)
-                .choiceMin(1)
-                .neg(R.string.button_open)
-                .neut(R.string.button_up)
-                .pos(R.string.button_pick);
     }
 
     private void showSelectedPathsToast(List<String> selectedPaths){

@@ -14,7 +14,7 @@ ext {
     gitUrl = 'https://github.com/isabsent/FilePicker.git'
 
 
-    libraryVersion = '1.0.07'
+    libraryVersion = '1.0.09'
 
     developerId = 'isabsent'
     developerName = 'Lev Popovich'
@@ -33,7 +33,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0.07"
+        versionName "1.0.09"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -50,6 +50,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.github.eltos:simpledialogfragment:2.2'
+    compile 'commons-io:commons-io:2.6'
 }
 
 //https://android-tools.ru/coding/kak-sozdat-svoyu-sobstvennuyu-biblioteku-android-cherez-jcenter-i-maven-central/
