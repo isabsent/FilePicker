@@ -55,16 +55,16 @@ or `SimpleFilePickerDialog.InteractionListenerString` interface if you are defyi
                 .title(title)
                 .show(this, dialogTag);
     }
-or any of two above if you are not specifiying a dialog title and get result in `onResult` callback:
+or any of two above if you are not specifying a dialog title. A result of selection is available in `onResult` callback:
 
     @Override
     public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
         switch (dialogTag) {
             case PICK_DIALOG:
                 if (extras.containsKey(SimpleFilePickerDialog.SELECTED_SINGLE_PATH)) 
-		    //Do what you want with single selection		
+		        //Do what you want with single selection		
                 else if (extras.containsKey(SimpleFilePickerDialog.SELECTED_PATHS))
-		    //Do what you want with multiple selection	  
+		        //Do what you want with multiple selection	  
                 break;
         }
         return false;
