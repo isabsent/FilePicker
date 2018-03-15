@@ -16,11 +16,11 @@ File and folder picker dialog
       <type>pom</type>
     </dependency>
 
-![FILE_ONLY_SINGLE_CHOICE](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_01.png)
+![FILE_ONLY_SINGLE_CHOICE](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_01.png "Description goes here")
 ![FOLDER_ONLY_MULTI_CHOICE](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_02.png)
 ![FILE_OR_FOLDER_DIRECT_CHOICE_SELECTION](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_03.png)
 
-You can explore internal memory file system with any of 12 modes: 
+You can explore **internal memory file system** with any of 12 modes: 
 
         FILE_ONLY_SINGLE_CHOICE
         FILE_ONLY_MULTI_CHOICE
