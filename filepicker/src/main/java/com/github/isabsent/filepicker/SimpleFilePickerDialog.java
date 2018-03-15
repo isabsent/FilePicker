@@ -21,7 +21,6 @@ import com.github.isabsent.filepicker.entity.Item;
 import com.github.isabsent.filepicker.entity.ItemViewHolder;
 import com.github.isabsent.filepicker.entity.SimpleFilePickerItem;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -35,9 +34,8 @@ import eltos.simpledialogfragment.SimpleDialog;
 import eltos.simpledialogfragment.color.SimpleColorDialog;
 import eltos.simpledialogfragment.list.AdvancedAdapter;
 import eltos.simpledialogfragment.list.CustomListDialog;
-import eltos.simpledialogfragment.list.SimpleListDialog;
 
-import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED;
+import static com.github.isabsent.filepicker.SimpleFilePickerDialog.CompositeMode.FILE_OR_FOLDER_DIRECT_CHOICE_SELECTION;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITEM_FILE_FOLDER;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITEM_FILE_ONLY;
 import static com.github.isabsent.filepicker.SimpleFilePickerDialog.ItemMode.ITEM_FOLDER_ONLY;
@@ -82,7 +80,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         if (folderPath == null)
             folderPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         if (mode == null)
-            mode = FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED;
+            mode = FILE_OR_FOLDER_DIRECT_CHOICE_SELECTION;
 
         return new SimpleFilePickerDialog().path(folderPath, mode)
                 .choiceMin(1)
@@ -169,14 +167,11 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 upButton.setEnabled(false);
 
             openButton = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);//Open
-//            if (choiceMode == SimpleListDialog.SINGLE_CHOICE_DIRECT)
                 openButton.setEnabled(false);
 
             selectButton = alertDialog.getButton(Dialog.BUTTON_POSITIVE);//Select
             if (ITEM_FILE_ONLY.equals(mode.getItemMode()))
                 selectButton.setEnabled(false);
-//            else
-//                selectButton.setEnabled(true);
         }
     }
 
@@ -465,9 +460,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
 
     private void setButtons(boolean isOpenEnabled, boolean isSelectEnabled) {
         openButton.setEnabled(isOpenEnabled);
-//        if (ITEM_FILE_FOLDER.equals(mode.getItemMode()) || ITEM_FILE_ONLY.equals(mode.getItemMode()))
-            selectButton.setEnabled(isSelectEnabled);
-
+        selectButton.setEnabled(isSelectEnabled);
     }
 
     private static boolean isExternalStorageRoot(String path) {
@@ -504,17 +497,17 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         FILE_ONLY_SINGLE_CHOICE(ITEM_FILE_ONLY, SINGLE_CHOICE),
         FILE_ONLY_MULTI_CHOICE(ITEM_FILE_ONLY, MULTI_CHOICE),
         FILE_ONLY_DIRECT_CHOICE_IMMEDIATE(ITEM_FILE_ONLY, SINGLE_CHOICE_DIRECT),
-        FILE_ONLY_DIRECT_CHOICE_POSTPONED(ITEM_FILE_ONLY, SINGLE_CHOICE_DIRECT),
+        FILE_ONLY_DIRECT_CHOICE_SELECTION(ITEM_FILE_ONLY, SINGLE_CHOICE_DIRECT),
 
         FOLDER_ONLY_SINGLE_CHOICE(ITEM_FOLDER_ONLY, SINGLE_CHOICE),
         FOLDER_ONLY_MULTI_CHOICE(ITEM_FOLDER_ONLY, MULTI_CHOICE),
         FOLDER_ONLY_DIRECT_CHOICE_IMMEDIATE(ITEM_FOLDER_ONLY, SINGLE_CHOICE_DIRECT),
-        FOLDER_ONLY_DIRECT_CHOICE_POSTPONED(ITEM_FOLDER_ONLY, SINGLE_CHOICE_DIRECT),
+        FOLDER_ONLY_DIRECT_CHOICE_SELECTION(ITEM_FOLDER_ONLY, SINGLE_CHOICE_DIRECT),
 
         FILE_OR_FOLDER_SINGLE_CHOICE(ITEM_FILE_FOLDER, SINGLE_CHOICE),
         FILE_AND_FOLDER_MULTI_CHOICE(ITEM_FILE_FOLDER, MULTI_CHOICE),
         FILE_OR_FOLDER_DIRECT_CHOICE_IMMEDIATE(ITEM_FILE_FOLDER, SINGLE_CHOICE_DIRECT),
-        FILE_OR_FOLDER_DIRECT_CHOICE_POSTPONED(ITEM_FILE_FOLDER, SINGLE_CHOICE_DIRECT);
+        FILE_OR_FOLDER_DIRECT_CHOICE_SELECTION(ITEM_FILE_FOLDER, SINGLE_CHOICE_DIRECT);
 
         private ItemMode itemMode;
         private int choiceMode;

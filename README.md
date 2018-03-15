@@ -4,7 +4,7 @@ File and folder picker dialog
 ## Gradle:
 
     dependencies {
-      compile 'com.github.isabsent:filepicker:1.0.09'
+      compile 'com.github.isabsent:filepicker:1.1.00'
     }
 
 ## Maven:
@@ -12,15 +12,65 @@ File and folder picker dialog
     <dependency>
       <groupId>com.github.isabsent</groupId>
       <artifactId>filepicker</artifactId>
-      <version>1.0.09</version>
+      <version>1.1.00</version>
       <type>pom</type>
     </dependency>
 
-[The example of usage](https://github.com/isabsent/FilePicker/blob/master/app/src/main/java/com/github/isabsent/filepickerdemo/MainActivity.java)
+![FILE_ONLY_SINGLE_CHOICE](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_01.png)
+![FOLDER_ONLY_MULTI_CHOICE](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_02.png)
+![FILE_OR_FOLDER_DIRECT_CHOICE_SELECTION](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_03.png)
 
-![Pic. 1](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_01.png)
-![Pic. 2](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_02.png)
-![Pic. 3](https://github.com/isabsent/FilePicker/blob/master/screenshot/Screenshot_03.png)
+You can explore internal memory file system with any of 12 modes: 
+
+        FILE_ONLY_SINGLE_CHOICE
+        FILE_ONLY_MULTI_CHOICE
+        FILE_ONLY_DIRECT_CHOICE_IMMEDIATE
+        FILE_ONLY_DIRECT_CHOICE_SELECTION
+
+        FOLDER_ONLY_SINGLE_CHOICE
+        FOLDER_ONLY_MULTI_CHOICE
+        FOLDER_ONLY_DIRECT_CHOICE_IMMEDIATE
+        FOLDER_ONLY_DIRECT_CHOICE_SELECTION
+
+        FILE_OR_FOLDER_SINGLE_CHOICE
+        FILE_AND_FOLDER_MULTI_CHOICE
+        FILE_OR_FOLDER_DIRECT_CHOICE_IMMEDIATE
+        FILE_OR_FOLDER_DIRECT_CHOICE_SELECTION
+
+
+To use this library in your Activity class you have to realize `SimpleFilePickerDialog.InteractionListenerInt` interface if you are defying dialog title as an `int` resource ID:
+
+    @Override
+    public void showListItemDialog(int titleResId, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
+        SimpleFilePickerDialog.build(folderPath, mode)
+                .title(titleResId)
+                .show(this, dialogTag);
+    }
+
+or `SimpleFilePickerDialog.InteractionListenerString` interface if you are defying dialog title as a `String`:
+   
+    @Override
+    public void showListItemDialog(String title, String folderPath, SimpleFilePickerDialog.CompositeMode mode, String dialogTag){
+        SimpleFilePickerDialog.build(folderPath, mode)
+                .title(title)
+                .show(this, dialogTag);
+    }
+or any of two above if you are not specifiying a dialog title and get result in `onResult` callback:
+
+    @Override
+    public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
+        switch (dialogTag) {
+            case PICK_DIALOG:
+                if (extras.containsKey(SimpleFilePickerDialog.SELECTED_SINGLE_PATH)) 
+		    //Do what you want with single selection		
+                else if (extras.containsKey(SimpleFilePickerDialog.SELECTED_PATHS))
+		    //Do what you want with multiple selection	  
+                break;
+        }
+        return false;
+    }
+
+[The example of usage](https://github.com/isabsent/FilePicker/blob/master/app/src/main/java/com/github/isabsent/filepickerdemo/MainActivity.java)
 
 This library is an extension of [**SimpleDialogFragments**](https://github.com/eltos/SimpleDialogFragments)
 

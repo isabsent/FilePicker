@@ -14,7 +14,7 @@ ext {
     gitUrl = 'https://github.com/isabsent/FilePicker.git'
 
 
-    libraryVersion = '1.0.09'
+    libraryVersion = '1.1.00'
 
     developerId = 'isabsent'
     developerName = 'Lev Popovich'
@@ -33,7 +33,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0.09"
+        versionName "1.1.00"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
