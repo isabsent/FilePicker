@@ -82,7 +82,8 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
         if (mode == null)
             mode = FILE_OR_FOLDER_DIRECT_CHOICE_SELECTION;
 
-        return new SimpleFilePickerDialog().path(folderPath, mode)
+        return new SimpleFilePickerDialog()
+                .path(folderPath, mode)
                 .choiceMin(1)
                 .neut(R.string.button_up)
                 .neg(R.string.button_open)
@@ -167,7 +168,7 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
                 upButton.setEnabled(false);
 
             openButton = alertDialog.getButton(Dialog.BUTTON_NEGATIVE);//Open
-                openButton.setEnabled(false);
+            openButton.setEnabled(false);
 
             selectButton = alertDialog.getButton(Dialog.BUTTON_POSITIVE);//Select
             if (ITEM_FILE_ONLY.equals(mode.getItemMode()))
@@ -307,37 +308,39 @@ public class SimpleFilePickerDialog extends CustomListDialog<SimpleFilePickerDia
     }
 
     public SimpleFilePickerDialog path(String folderPath, final CompositeMode mode) {
-        final ItemMode itemMode = mode.getItemMode();
-        File[] items = new File(folderPath).listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File file) {
-                return ITEM_FILE_FOLDER.equals(itemMode) || ITEM_FILE_ONLY.equals(itemMode) || file.isDirectory();
-            }
-        });
-
-        List<File> itemsList = Arrays.asList(items);
-        Collections.sort(itemsList, new FileNameComparator(true));
-
-        ArrayList<SimpleFilePickerItem> list = new ArrayList<>(items.length);
-        int i = 0;
-        String[] itemPaths = new String[items.length];
-        String[] itemNames = new String[items.length];
-        boolean[] isFiles = new boolean[items.length];
-        for (File file : itemsList) {
-            itemPaths[i] = file.getAbsolutePath();
-            itemNames[i] = file.getName();
-            isFiles[i] = file.isFile();
-            list.add(new SimpleFilePickerItem(new Item(itemNames[i], isFiles[i]), itemNames[i].hashCode()));
-            i++;
-        }
-
         choiceMode(mode.getChoiceMode());
         setArg(COMPOSITE_MODE, mode.ordinal());
         setArg(FOLDER_PATH, folderPath);
         if (getArguments() != null) {
-            getArguments().putParcelableArrayList(DATA_SET, list);
-            getArguments().putStringArray(PATH_ARRAY, itemPaths);
+            final ItemMode itemMode = mode.getItemMode();
+            File[] items = new File(folderPath).listFiles(new FileFilter() {
+
+                @Override
+                public boolean accept(File file) {
+                    return ITEM_FILE_FOLDER.equals(itemMode) || ITEM_FILE_ONLY.equals(itemMode) || file.isDirectory();
+                }
+            });
+//            if (items.length == 0)
+                 emptyText("List is empty!");
+//            else {
+                List<File> itemsList = Arrays.asList(items);
+                Collections.sort(itemsList, new FileNameComparator(true));
+
+                ArrayList<SimpleFilePickerItem> list = new ArrayList<>(items.length);
+                int i = 0;
+                String[] itemPaths = new String[items.length];
+                String[] itemNames = new String[items.length];
+                boolean[] isFiles = new boolean[items.length];
+                for (File file : itemsList) {
+                    itemPaths[i] = file.getAbsolutePath();
+                    itemNames[i] = file.getName();
+                    isFiles[i] = file.isFile();
+                    list.add(new SimpleFilePickerItem(new Item(itemNames[i], isFiles[i]), itemNames[i].hashCode()));
+                    i++;
+                }
+                getArguments().putParcelableArrayList(DATA_SET, list);
+                getArguments().putStringArray(PATH_ARRAY, itemPaths);
+//            }
         }
         return this;
     }

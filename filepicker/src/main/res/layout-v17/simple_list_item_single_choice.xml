@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:checkMark="?android:attr/listChoiceIndicatorSingle"
         android:gravity="center_vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingStart"
+        android:paddingRight="?android:attr/listPreferredItemPaddingEnd"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/black">
     </CheckedTextView>

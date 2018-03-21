@@ -13,18 +13,14 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_folder_black_24dp" />
 
-    <CheckedTextView
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/text1"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="List item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkMark="?android:attr/listChoiceIndicatorSingle"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:gravity="center_vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/black">
-    </CheckedTextView>
+        android:paddingLeft="?android:attr/listPreferredItemPaddingStart"
+        android:paddingRight="?android:attr/listPreferredItemPaddingEnd"/>
 </LinearLayout>
